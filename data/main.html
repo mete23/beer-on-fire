@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beer on Fire</title>
+    <style>
+        body {
+            background-color: #34495e;
+            color: aliceblue;
+            align-content: center;
+        }
+        .title {
+            background-color: #8e44ad;
+            border-radius: 20pt;
+            text-align: center;
+        }
+        .slider {
+            background: #f39c12;
+            outline: none;
+            width: 100%;
+            height: 25px;
+            -webkit-appearance: none;
+            border-radius: 15px;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            background: #3498db;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .verticali {
+            transform: rotate(90);
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title" >Control</h1>
+    <div class="slidecontainer verticali">
+        speed
+        <input type="range" class="slider verticali" id="speed_slider" min="-255" max="255">
+    </div>
+
+    <div class="slidecontainer">
+        direction
+        <input type="range" class="slider" id="direction_slider" min="-70" max="70">
+    </div>
+
+    <div>current speed: <a id="speed_display">0</a></div>
+    <div>current direction: <a id="direction_display">0</a></div>
+
+
+    <script>
+        var speedSlider;
+        var directionSlider;
+
+        var speedDisplay;
+        var directionDisplay;
+
+        
+        window.onload = function() {
+            var anzeige = document.getElementById("anzeige");   
+            speedSlider = document.getElementById("speed_slider");
+            directionSlider = document.getElementById("direction_slider");
+
+            speedDisplay = document.getElementById("speed_display");
+            directionDisplay = document.getElementById("direction_display");
+            speedSlider.onchange = () => {
+                updateSend();
+            }
+    
+            directionSlider.onchange = () => {
+                normalizeDirection();
+                updateSend();
+            }
+        };
+
+        function sendValues(speed, direction) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST","control", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send("speed=" + speed + "&direction=" + direction);
+        }
+
+        function getDirection() {
+            directionSlider
+        }
+
+
+        function normalizeDirection() {
+            if (Math.abs(directionSlider.value) < 20) {
+                directionSlider.value = 0;
+            }
+        }
+
+
+
+
+        function updateSend() {
+            speedDisplay.innerHTML = speedSlider.value;
+            directionDisplay.innerHTML = directionSlider.value;
+            sendValues(speedSlider.value, directionSlider.value);
+        }
+
+    </script>
+</body>
+</html>
